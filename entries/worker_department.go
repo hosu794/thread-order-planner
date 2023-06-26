@@ -24,6 +24,19 @@ func NewWorkerDepartment(name string) (*WorkerDepartment, error) {
 
 }
 
+func (w *WorkerDepartment) GetEmployees() []Employee {
+
+	var departmentEmployees []Employee
+
+	for _, employee := range EmployeesList {
+		if employee.Department.Name == w.Name {
+			departmentEmployees = append(departmentEmployees, employee)
+		}
+	}
+
+	return departmentEmployees
+}
+
 func exists(name string) bool {
 	return nameMap[name]
 }
