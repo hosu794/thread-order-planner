@@ -2,7 +2,6 @@ package entries
 
 import (
 	"fmt"
-	"sync"
 	"time"
 )
 
@@ -59,28 +58,16 @@ func (o *Order) StartOrder() {
 
 	o.RealizationDate = time.Now()
 
-	var wg sync.WaitGroup
-
-	wg.Add(len(o.jobList))
-
 	for _, job := range o.jobList {
 		job := job
-		go func() {
-			defer wg.Done()
-
-			time.Sleep(time.Duration(job.JobTime) * time.Second)
-			fmt.Println(job.Description)
-			fmt.Println(job.JobTime)
-			fmt.Println(job.IsDone)
-			fmt.Println(job.JobType)
-			fmt.Println(time.Duration(job.JobTime) * time.Second)
-			job.IsDone = true
-		}()
+		time.Sleep(time.Duration(job.JobTime) * time.Second)
+		fmt.Println(job.Description)
+		fmt.Println(job.JobTime)
+		fmt.Println(job.IsDone)
+		fmt.Println(job.JobType)
+		fmt.Println(time.Duration(job.JobTime) * time.Second)
+		job.IsDone = true
 	}
-
-	fmt.Println("test")
-
-	wg.Wait()
 
 	o.EndDate = time.Now()
 
