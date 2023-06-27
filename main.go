@@ -46,6 +46,7 @@ func main() {
 	var employeesForJobTwo []entries.EmployeeGettersSettersInterface
 
 	employeesForJobTwo = append(employeesForJobTwo, employee4)
+	employeesForJobTwo = append(employeesForJobTwo, employee1)
 
 	sort.Sort(entries.ByFields(employeesForJobOne))
 
@@ -75,13 +76,12 @@ func main() {
 	order1.AddJob(*job1)
 	order1.AddJob(*job2)
 	order1.SetBrigade(*brigade1)
-	order1.SetBlocker(emplBlocker)
 
 	order2.AddJob(*job4)
 	order2.AddJob(*job5)
 	order2.SetBrigade(*brigade2)
-	order2.SetBlocker(emplBlocker)
 
+	orderManager.SetBlocker(emplBlocker)
 	orderManager.AddOrder(order1)
 	orderManager.AddOrder(order2)
 

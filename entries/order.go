@@ -21,7 +21,6 @@ type Order struct {
 	CreationDate    time.Time
 	RealizationDate time.Time
 	EndDate         time.Time
-	EmployeeBlocker *EmployeeBlocker
 }
 
 func NewOrder(status OrderStatus) *Order {
@@ -33,7 +32,6 @@ func NewOrder(status OrderStatus) *Order {
 		CreationDate:    time.Now(),
 		RealizationDate: time.Time{},
 		EndDate:         time.Time{},
-		EmployeeBlocker: nil,
 	}
 
 	return order
@@ -73,8 +71,4 @@ func (o *Order) StartOrder() {
 
 	fmt.Println("All jobs done!")
 
-}
-
-func (o *Order) SetBlocker(blocker *EmployeeBlocker) {
-	o.EmployeeBlocker = blocker
 }
