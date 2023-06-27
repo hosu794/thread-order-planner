@@ -16,23 +16,25 @@ const (
 )
 
 type Order struct {
-	jobList         []Job
+	jobList         []*Job
 	Brigade         *Brigade
 	OrderStatus     OrderStatus
 	CreationDate    time.Time
 	RealizationDate time.Time
 	EndDate         time.Time
+	EmployeeBlocker *EmployeeBlocker
 }
 
 func NewOrder(status OrderStatus) *Order {
 
 	order := &Order{
-		jobList:         []Job{},
+		jobList:         []*Job{},
 		Brigade:         nil,
 		OrderStatus:     status,
 		CreationDate:    time.Now(),
 		RealizationDate: time.Time{},
 		EndDate:         time.Time{},
+		EmployeeBlocker: nil,
 	}
 
 	return order
@@ -40,7 +42,7 @@ func NewOrder(status OrderStatus) *Order {
 }
 
 func (o *Order) AddJob(job Job) {
-	o.jobList = append(o.jobList, job)
+	o.jobList = append(o.jobList, &job)
 }
 
 func (o *Order) SetBrigade(brigade Brigade) bool {
@@ -62,21 +64,30 @@ func (o *Order) StartOrder() {
 	wg.Add(len(o.jobList))
 
 	for _, job := range o.jobList {
-
 		job := job
 		go func() {
-			time.Sleep(time.Duration(job.JobTime) * time.Second) // Zatrzymaj goroutine na 5 sekund
+			defer wg.Done()
+
+			time.Sleep(time.Duration(job.JobTime) * time.Second)
 			fmt.Println(job.Description)
 			fmt.Println(job.JobTime)
 			fmt.Println(job.IsDone)
 			fmt.Println(job.JobType)
 			fmt.Println(time.Duration(job.JobTime) * time.Second)
 			job.IsDone = true
-			wg.Done()
 		}()
 	}
+
+	fmt.Println("test")
+
 	wg.Wait()
 
-	fmt.Println("Wszystkie prace zostały wykonane z zlecenia")
+	o.EndDate = time.Now()
 
+	fmt.Println("All jobs done!")
+
+}
+
+func (o *Order) SetBlocker(blocker *EmployeeBlocker) {
+	o.EmployeeBlocker = blocker
 }
