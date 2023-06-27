@@ -26,44 +26,40 @@ func main() {
 		panic(err)
 	}
 
-	employee1, err := entries.NewEmployee("Grzegorz", "Szczesny", time.Now(), *department1)
+	employee1 := entries.NewEmployee("Grzegorz", "Szczesny", time.Now(), *department1)
 
-	if err != nil {
-		log.Println(employee1)
-		panic(err)
-	}
+	employee2 := entries.NewEmployee("Agata", "Bąk", time.Now(), *department2)
 
-	employee2, err := entries.NewEmployee("Agata", "Bąk", time.Now(), *department2)
+	employee3 := entries.NewEmployee("Krzysztof", "Kowalski", time.Now(), *department1)
 
-	if err != nil {
-		log.Println(employee2)
-		panic(err)
-	}
+	expert1 := entries.NewExpert("Adam", "Kozuch", time.Now(), *department1, "Senior Golang Developer")
 
-	employee3, err := entries.NewEmployee("Krzysztof", "Kowalski", time.Now(), *department1)
+	var employees []entries.EmployeeGettersSettersInterface
 
-	if err != nil {
-		log.Println(employee3)
-		panic(err)
-	}
-
-	var employees []entries.Employee
-
-	employees = append(employees, *employee1)
-	employees = append(employees, *employee2)
-	employees = append(employees, *employee3)
-
-	fmt.Println("Before sort:")
-
-	for _, employee := range employees {
-		fmt.Println(employee.Name, employee.Surname, employee.BirthDate, employee.Department.Name)
-	}
-
-	fmt.Println("After sorting")
+	employees = append(employees, employee1)
+	employees = append(employees, employee2)
+	employees = append(employees, employee3)
+	employees = append(employees, expert1)
 
 	sort.Sort(entries.ByFields(employees))
 
-	for _, employee := range employees {
-		fmt.Println(employee.Name, employee.Surname, employee.BirthDate, employee.Department.Name)
-	}
+	foreman1 := entries.NewForeman("Adam", "Kowalksi", time.Now(), *department1, "adam.kowalski", "password")
+
+	brigade1 := entries.NewBrigade("programisci")
+	brigade1.SetForeman(*foreman1)
+
+	brigade1.AddEmployees(employees)
+
+	job1 := entries.NewJob(entries.Installation, 5, "opis 123")
+	job2 := entries.NewJob(entries.Installation, 3, "opis 123323")
+
+	order1 := entries.NewOrder(entries.Planned)
+
+	order1.AddJob(*job1)
+	order1.AddJob(*job2)
+
+	order1.SetBrigade(*brigade1)
+
+	order1.StartOrder()
+
 }

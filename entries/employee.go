@@ -2,6 +2,13 @@ package entries
 
 import "time"
 
+type EmployeeGettersSettersInterface interface {
+	GetName() string
+	GetSurname() string
+	GetBirthDate() time.Time
+	GetDepartment() WorkerDepartment
+}
+
 var EmployeesList []Employee
 
 type Employee struct {
@@ -11,7 +18,7 @@ type Employee struct {
 	Department WorkerDepartment
 }
 
-func NewEmployee(name string, surname string, birthDate time.Time, department WorkerDepartment) (*Employee, error) {
+func NewEmployee(name string, surname string, birthDate time.Time, department WorkerDepartment) *Employee {
 
 	employee := Employee{
 		Name:       name,
@@ -22,19 +29,35 @@ func NewEmployee(name string, surname string, birthDate time.Time, department Wo
 
 	EmployeesList = append(EmployeesList, employee)
 
-	return &employee, nil
+	return &employee
 }
 
-type ByFields []Employee
+func (e *Employee) GetName() string {
+	return e.Name
+}
+
+func (e *Employee) GetSurname() string {
+	return e.Surname
+}
+
+func (e *Employee) GetBirthDate() time.Time {
+	return e.BirthDate
+}
+
+func (e *Employee) GetDepartment() WorkerDepartment {
+	return e.Department
+}
+
+type ByFields []EmployeeGettersSettersInterface
 
 func (a ByFields) Len() int      { return len(a) }
 func (a ByFields) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 func (a ByFields) Less(i, j int) bool {
-	if a[i].Name != a[j].Name {
-		return a[i].Name < a[j].Name
+	if a[i].GetName() != a[j].GetName() {
+		return a[i].GetName() < a[j].GetName()
 	}
-	if a[i].Surname != a[j].Surname {
-		return a[i].Surname < a[j].Surname
+	if a[i].GetSurname() != a[j].GetSurname() {
+		return a[i].GetSurname() < a[j].GetSurname()
 	}
-	return a[i].BirthDate.Before(a[j].BirthDate)
+	return a[i].GetBirthDate().Before(a[j].GetBirthDate())
 }
